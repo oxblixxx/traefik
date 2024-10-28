@@ -1,0 +1,32 @@
+version: "3"
+services:
+
+  traefik:
+    image: traefik:v3.1
+    environment:
+      - CF_API_EMAIL=phamust111@gmail.com
+      - CF_DNS_API_TOKEN=sGc4_BSnA_7VFJ6nafgpG1FGBRmTYh20fGRY5bFC
+      - TZ=US/Chicago
+    command:
+      - --accesslog.fields.names.StartUTC=drop
+    labels:
+      - "traefik.http.routers.api.rule=Host(`dashboard.oxlava.me`)"
+#      - "traefik.http.routers.api.service=api@internal"
+      - "traefik.port=8080"
+      - "traefik.enable=true"
+#      - "traefik.http.routers.dashboard.middlewares=auth"
+      - "traefik.frontend.auth.basic.users=oxblixxx:$$2y$$05$$Sbi3GjRz0UjRPHhpmEz1C.t/aeAe11yj6tGKu5/aj0jVR.k3kse.W"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /home/azureuser/traefik-new/config/traefik.yaml:/etc/traefik/traefik.yaml:ro
+      - /home/azureuser/traefik-new/config/acme.json:/acme.json
+#      - /home/ubuntu/docker/traefik/config.yml:/config.yml:ro
+      - /home/azureuuser/traefik-new/config/logs:/var/log/traefik
+    ports:
+      - 80:80
+      - 443:443
+      - 8080:8080
+      - 8081:8081
+networks:
+  traefik:
+    external: true
